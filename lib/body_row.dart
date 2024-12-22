@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:x/second_body_column.dart';
 
@@ -10,9 +11,13 @@ class BodyRow extends StatefulWidget {
 
 class _BodyRowState extends State<BodyRow> {
   var headingValue = "VIDEO";
-  setStateForHeadingValue(String text) {
+  List<String> listExtension=["mp4"];
+  FileType fileType = FileType.video;
+  setStateForHeadingValue(String text,List) {
+    //! setstate ma tanne and then supply those listextension and filetype from ClickableCOnent(a,b,c,d);;;;;;;
     setState(() {
       headingValue = text;
+      if Te
     });
   }
 
