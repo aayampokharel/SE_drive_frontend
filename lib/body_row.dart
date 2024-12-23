@@ -72,7 +72,7 @@ class _BodyRowState extends State<BodyRow> {
         Expanded(
           child: Container(
             color: Colors.green,
-            child: SecondBodyColumn(headingValue, extensionList, fileType),
+            child: SecondBodyColumn(headingValue, extensionList),
           ),
         ),
       ],

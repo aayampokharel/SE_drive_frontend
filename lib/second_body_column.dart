@@ -7,8 +7,8 @@ import 'package:x/map_for_post.dart';
 class SecondBodyColumn extends StatefulWidget {
   String headingValue;
   List<String> extensionList;
-  FileType fileType;
-  SecondBodyColumn(this.headingValue, this.extensionList, this.fileType);
+
+  SecondBodyColumn(this.headingValue, this.extensionList);
 
   @override
   State<SecondBodyColumn> createState() => _SecondBodyColumnState();
@@ -19,10 +19,9 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
     return Uri.parse(mapForPost[mapkey]!["uri"]!);
   }
 
-  void openFileSelector(
-      FileType fileType, String fieldName, List<String> extensions) async {
+  void openFileSelector() async {
     print("💦💦💦💦💦💦💦💦");
-    print(widget.fileType);
+
     print(widget.extensionList);
     print("💦💦💦💦💦💦💦💦");
     FilePickerResult? file = await FilePicker.platform.pickFiles(
@@ -37,9 +36,11 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
     final fileName = file.files.single.name;
     final fileBytes = file.files.single.bytes;
     if (fileBytes != null) {
-      var result = http.MultipartRequest("POST", urlFunction(fieldName));
+      var result =
+          http.MultipartRequest("POST", urlFunction(widget.headingValue));
 
-      result.files.add(http.MultipartFile.fromBytes(fieldName, fileBytes,
+      result.files.add(http.MultipartFile.fromBytes(
+          widget.headingValue, fileBytes,
           filename: fileName));
 
       var response = await result.send();
@@ -63,8 +64,7 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
                 alignment: Alignment.centerRight,
                 child: IconButton(
                     onPressed: () {
-                      openFileSelector(widget.fileType, widget.headingValue,
-                          widget.extensionList);
+                      openFileSelector();
                     },
                     icon: Icon(Icons.add)))
           ],
