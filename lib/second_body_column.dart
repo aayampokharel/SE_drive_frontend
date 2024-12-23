@@ -21,9 +21,13 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
 
   void openFileSelector(
       FileType fileType, String fieldName, List<String> extensions) async {
+    print("💦💦💦💦💦💦💦💦");
+    print(widget.fileType);
+    print(widget.extensionList);
+    print("💦💦💦💦💦💦💦💦");
     FilePickerResult? file = await FilePicker.platform.pickFiles(
-      type: fileType,
-      allowedExtensions: extensions,
+      type: FileType.custom,
+      allowedExtensions: widget.extensionList,
       withData: true, //this is for flutter web where no access to path .
     );
     if (file == null) {
@@ -32,15 +36,16 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
     }
     final fileName = file.files.single.name;
     final fileBytes = file.files.single.bytes;
-    if (fileBytes != null) {}
-    var result = http.MultipartRequest("POST", urlFunction(fieldName));
+    if (fileBytes != null) {
+      var result = http.MultipartRequest("POST", urlFunction(fieldName));
 
-    result.files.add(http.MultipartFile.fromBytes(fieldName, fileBytes!,
-        filename: fileName));
+      result.files.add(http.MultipartFile.fromBytes(fieldName, fileBytes,
+          filename: fileName));
 
-    var response = await result.send();
-    if (response.statusCode == 200) {
-      print("success");
+      var response = await result.send();
+      if (response.statusCode == 200) {
+        print("success");
+      }
     }
   }
 
@@ -56,7 +61,12 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
             Expanded(child: Center(child: Text(widget.headingValue))),
             Align(
                 alignment: Alignment.centerRight,
-                child: IconButton(onPressed: () {}, icon: Icon(Icons.add)))
+                child: IconButton(
+                    onPressed: () {
+                      openFileSelector(widget.fileType, widget.headingValue,
+                          widget.extensionList);
+                    },
+                    icon: Icon(Icons.add)))
           ],
         ),
       ),

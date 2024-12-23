@@ -11,13 +11,38 @@ class BodyRow extends StatefulWidget {
 
 class _BodyRowState extends State<BodyRow> {
   var headingValue = "VIDEO";
-  List<String> listExtension=["mp4"];
+  List<String> extensionList = ["mp4"];
   FileType fileType = FileType.video;
-  setStateForHeadingValue(String text,List) {
-    //! setstate ma tanne and then supply those listextension and filetype from ClickableCOnent(a,b,c,d);;;;;;;
+  void setStateForHeadingValue(String text) {
+    //! setstate ma tanne and then supply those listextension and filetype from ClickableContent(a, b, c, d);;;;;;;
     setState(() {
       headingValue = text;
-      if Te
+      switch (text) {
+        case "Photo":
+          extensionList = ["jpg", "png"];
+          fileType = FileType.image;
+          break;
+        case "Video":
+          extensionList = ["mp4", "mkv", "avi"];
+          fileType = FileType.video;
+          break;
+        case "Audio":
+          extensionList = ["mp3", "wav", "ogg"];
+          fileType = FileType.audio;
+          break;
+        case "PDF":
+          extensionList = ["pdf"];
+          fileType = FileType.custom;
+          break;
+        case "Text":
+          extensionList = ["txt", "md"];
+          fileType = FileType.custom;
+          break;
+        default:
+          extensionList = [];
+          fileType = FileType.any;
+          break;
+      }
     });
   }
 
@@ -47,7 +72,7 @@ class _BodyRowState extends State<BodyRow> {
         Expanded(
           child: Container(
             color: Colors.green,
-            child: SecondBodyColumn(headingValue),
+            child: SecondBodyColumn(headingValue, extensionList, fileType),
           ),
         ),
       ],
