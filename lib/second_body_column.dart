@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:x/map_for_post.dart';
+import 'package:dio/dio.dart';
 
 //@ second body column is the column covering most of the body , the firstcolumn consists of text,videos , etc tab inside inkwell whereas this consists of all the files for that selected tab displays it , can add new file , etc '
 class SecondBodyColumn extends StatefulWidget {
@@ -16,14 +17,10 @@ class SecondBodyColumn extends StatefulWidget {
 
 class _SecondBodyColumnState extends State<SecondBodyColumn> {
   Uri urlFunction(String mapkey) {
-    return Uri.parse(mapForPost[mapkey]!["uri"]!);
+    return Uri.parse(mapForUploadDownload[mapkey]!["uri"]!);
   }
 
   void openFileSelector() async {
-    print("💦💦💦💦💦💦💦💦");
-
-    print(widget.extensionList);
-    print("💦💦💦💦💦💦💦💦");
     FilePickerResult? file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: widget.extensionList,

@@ -1,17 +1,22 @@
-Map<String, Map<String, String>> mapForPost = {
+Map<String, Map<String, String>> mapForUploadDownload = {
   "Photo": {
-    "uri": "http://localhost:8080/uploadphotos",
+    "upload": "http://localhost:8080/uploadphotos",
+    "download": "http://localhost:8080/downloadphotos",
   },
   "Video": {
-    "uri": "http://localhost:8080/uploadvideos",
+    "upload": "http://localhost:8080/uploadvideos",
+    "download": "http://localhost:8080/downloadvideos",
   },
   "Audio": {
-    "uri": "http://localhost:8080/uploadaudios",
+    "upload": "http://localhost:8080/uploadaudios",
+    "download": "http://localhost:8080/downloadaudios",
   },
   "Text": {
-    "uri": "http://localhost:8080/uploadtexts",
+    "upload": "http://localhost:8080/uploadtexts",
+    "download": "http://localhost:8080/downloadtexts",
   },
   "PDF": {
-    "uri": "http://localhost:8080/uploadpdfs",
+    "upload": "http://localhost:8080/uploadpdfs",
+    "download": "http://localhost:8080/downloadpdfs",
   },
 };
