@@ -17,7 +17,11 @@ class SecondBodyColumn extends StatefulWidget {
 
 class _SecondBodyColumnState extends State<SecondBodyColumn> {
   Uri urlFunction(String mapkey) {
-    return Uri.parse(mapForUploadDownload[mapkey]!["uri"]!);
+    return Uri.parse(mapForUploadDownload[mapkey]!["upload"]!);
+  }
+
+  String urlString(String mapkey) {
+    return mapForUploadDownload[mapkey]!["upload"]!;
   }
 
   void openFileSelector() async {
@@ -27,20 +31,38 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
       withData: true, //this is for flutter web where no access to path .
     );
     if (file == null) {
-      print("no file seelected ");
+      print("no file selected ");
       return;
     }
     final fileName = file.files.single.name;
     final fileBytes = file.files.single.bytes;
     if (fileBytes != null) {
-      var result =
-          http.MultipartRequest("POST", urlFunction(widget.headingValue));
+      // var result =
+      //     http.MultipartRequest("POST", urlFunction(widget.headingValue));
+//@ creating Dio instance .
+      var dio = Dio();
+      //@intializing formdata for file .
+      FormData fileAsFormData = FormData.fromMap({
+        widget.headingValue:
+            MultipartFile.fromBytes(fileBytes, filename: fileName)
+      });
+//@ response with dio instance .
+      Response response = await dio.post(
+        urlString(
+          widget.headingValue,
+        ),
+        data: fileAsFormData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+      // result.files.add(http.MultipartFile.fromBytes(
+      //     widget.headingValue, fileBytes,
+      //     filename: fileName));
 
-      result.files.add(http.MultipartFile.fromBytes(
-          widget.headingValue, fileBytes,
-          filename: fileName));
-
-      var response = await result.send();
+      // var response = await result.send();
       if (response.statusCode == 200) {
         print("success");
       }
