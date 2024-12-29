@@ -45,7 +45,7 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
       // Create an XMLHttpRequest to track progress manually
       html.HttpRequest request = html.HttpRequest();
       request
-        ..open('POST', urlString(widget.headingValue).toString())
+        ..open('POST', urlString(widget.headingValue))
         ..onProgress.listen((event) {
           if (event.lengthComputable) {
             setState(() {
