@@ -1,10 +1,10 @@
 Map<String, Map<String, String>> mapForUploadDownload = {
   "Photo": {
-    "upload": "http://localhost:8080/uploadphotos",
+    "upload": "http://10.0.2.2:41114/uploadphotos",
     "download": "http://localhost:8080/downloadphotos",
   },
   "Video": {
-    "upload": "http://localhost:8080/uploadvideos",
+    "upload": "http://10.0.2.2:41114/uploadvideos",
     "download": "http://localhost:8080/downloadvideos",
   },
   "Audio": {

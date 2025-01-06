@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:html' as html;
+import 'package:http/http.dart' as http;
 
 import 'package:x/map_for_post.dart';
+import 'package:dio/dio.dart';
 
 class SecondBodyColumn extends StatefulWidget {
   String headingValue;
@@ -18,55 +19,51 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
   double uploadProgress = 0.0;
 
   String urlString(String mapkey) {
-    // Assuming this is where your server URL is defined
     return mapForUploadDownload[mapkey]!["upload"]!;
   }
 
   void openFileSelector() async {
-    FilePickerResult? file = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: widget.extensionList,
-      withData: true, // This is for Flutter Web where no access to file path
+      withReadStream: true,
     );
 
-    if (file == null) {
+    if (result == null) {
       print("No file selected");
       return;
     }
+    var file = result.files.single;
+    final fileName = file.name;
+    final fileSize = file.size;
+    var dio = Dio();
+    FormData formData = FormData.fromMap({
+      widget.headingValue: MultipartFile.fromStream(() {
+        return file.readStream!;
+      }, fileSize, filename: fileName),
+    });
+    dio.options.headers = {
+      'Content-Type':
+          'multipart/form-data', // Explicitly set, though it's often automatic for FormData
+      // Replace with the actual token if needed
+    };
 
-    final fileName = file.files.single.name;
-    final fileBytes = file.files.single.bytes;
+    print("💦");
+    print(dio.options.headers);
+    print("💦");
 
-    if (fileBytes != null) {
-      var formData = html.FormData();
-      formData.appendBlob(
-          widget.headingValue, html.Blob([fileBytes]), fileName);
-
-      // Create an XMLHttpRequest to track progress manually
-      html.HttpRequest request = html.HttpRequest();
-      request
-        ..open('POST', urlString(widget.headingValue))
-        ..onProgress.listen((event) {
-          if (event.lengthComputable) {
-            setState(() {
-              uploadProgress = event.loaded! / event.total!;
-            });
-            print('Progress: ${(uploadProgress * 100).toStringAsFixed(2)}%');
-          }
-        })
-        ..onLoad.listen((event) {
-          if (request.status == 200) {
-            print('Upload successful');
-          } else {
-            print('Upload failed with status: ${request.status}');
-          }
-        })
-        ..send(formData);
-    }
+   var response= await dio.post(
+      urlString(widget.headingValue),
+      data: formData,
+      onSendProgress: (int sent, int total) {
+        print(sent/total);
+      },
+    );
+  print("hello");
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
