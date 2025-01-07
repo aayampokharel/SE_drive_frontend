@@ -69,7 +69,7 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
         customChunkedStream(fileReadStream, 512 * 1024); // 512 KB chunk size
     customStream.listen((chunk) {
       totalBytesTransferred += chunk.length;
-      print((totalBytesTransferred / fileSize).toStringAsFixed(4));
+      // print((totalBytesTransferred / fileSize).toStringAsFixed(4));
     });
 
     // Prepare the request to upload the file
@@ -82,6 +82,19 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
     request.files.add(multipartFile);
     final httpClient = http.Client();
     final response = await httpClient.send(request);
+    response.stream.listen(
+      (chunkFromServer) {
+        print("🔥🔥 Chunk size: ${chunkFromServer.length}");
+        // Here you can process the chunk
+      },
+      onDone: () {
+        print("Finished processing all chunks.");
+      },
+      onError: (error) {
+        print("Error occurred: $error");
+      },
+      cancelOnError: true,
+    );
 
     if (response.statusCode != 200) {
       throw Exception('HTTP ${response.statusCode}');
