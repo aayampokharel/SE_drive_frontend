@@ -80,25 +80,38 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
         filename: fileName);
 
     request.files.add(multipartFile);
-    final httpClient = http.Client();
-    final response = await httpClient.send(request);
-    response.stream.listen(
-      (chunkFromServer) {
-        print("🔥🔥 Chunk size: ${chunkFromServer.length}");
-        // Here you can process the chunk
-      },
-      onDone: () {
-        print("Finished processing all chunks.");
-      },
-      onError: (error) {
-        print("Error occurred: $error");
-      },
-      cancelOnError: true,
-    );
 
-    if (response.statusCode != 200) {
-      throw Exception('HTTP ${response.statusCode}');
-    }
+    final httpClient = http.Client();
+    httpClient.send(request).then((streamedResponse) {
+      // Listen to the response stream for incoming chunks
+      streamedResponse.stream.listen(
+        (chunkFromServer) {
+          print("Chunk received: ${chunkFromServer.length}");
+        },
+        onDone: () {
+          print("Finished processing all chunks.");
+        },
+        onError: (error) {
+          print("Error occurred: $error");
+        },
+        cancelOnError: true,
+      );
+    }).catchError((error) {
+      print("Request error: $error");
+    });
+
+    //final responseFuture = httpClient.send(request);
+
+    // final responseFuture = httpClient
+    //     .send(request); // Process the response stream as chunks arrive
+    // final streamedResponse = await responseFuture;
+
+    // print("💦💦💦💦");
+    // print(streamedResponse);
+    // print("💦💦💦💦");
+    // streamedResponse.stream.listen((responseStream) {
+    //   print("done ");
+    // });
 
     print("File uploaded successfully");
   }
