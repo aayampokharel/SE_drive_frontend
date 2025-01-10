@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:x/Logic/uploadDownload.dart';
+import 'package:x/Logic/upload.dart';
 
 import 'package:x/map_for_post.dart';
 import 'package:dio/dio.dart';
@@ -18,15 +18,13 @@ class SecondBodyColumn extends StatefulWidget {
 
 class _SecondBodyColumnState extends State<SecondBodyColumn> {
   double uploadProgress = 0.0;
-
-  String urlString(String mapkey) {
-    return mapForUploadDownload[mapkey]!["upload"]!;
-  }
+  double streamingResponseProgress = 0.0;
 
   void setStateForUploadPercent(num totalBytesTransferred, num fileSize) {
     setState(() {
-      uploadProgress = totalBytesTransferred / fileSize; // Update progress
+      uploadProgress = totalBytesTransferred / fileSize * 0.5;
     });
+    print(uploadProgress);
   }
 
 //   var dio = Dio();
@@ -40,10 +38,6 @@ class _SecondBodyColumnState extends State<SecondBodyColumn> {
   //         'multipart/form-data', // Explicitly set, though it's often automatic for FormData
   //     // Replace with the actual token if needed
   //   };
-
-  //   print("💦");
-  //   print(dio.options.headers);
-  //   print("💦");
 
   //  var response= await dio.post(
   //     urlString(widget.headingValue),

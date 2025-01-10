@@ -69,23 +69,27 @@ void openFileSelector(Function(num, num) setStateForUploadPercent,
   request.files.add(multipartFile);
 
   final httpClient = http.Client();
-  httpClient.send(request).then((streamedResponse) {
-    // Listen to the response stream for incoming chunks
-    streamedResponse.stream.listen(
-      (chunkFromServer) {
-        print("Chunk received: ${chunkFromServer.length}");
-      },
-      onDone: () {
-        print("Finished processing all chunks.");
-      },
-      onError: (error) {
-        print("Error occurred: $error");
-      },
-      cancelOnError: true,
-    );
-  }).catchError((error) {
-    print("Request error: $error");
-  });
+  var streamedResponse = await httpClient.send(request);
+  var newFileSize = streamedResponse.headers['file-size'];
+
+  // Listen to the response stream for incoming chunks
+  print(streamedResponse.headersSplitValues);
+  streamedResponse.stream.listen(
+    (chunkFromServer) {
+      print(newFileSize);
+      print("Chunk received: ${chunkFromServer.length}");
+    },
+    onDone: () {
+      print(newFileSize);
+      print("Finished processing all chunks.");
+    },
+    onError: (error) {
+      print("Error occurred: $error");
+    },
+    cancelOnError: true,
+  );
+  print("File uploaded successfully");
+}
 
   //final responseFuture = httpClient.send(request);
 
@@ -100,5 +104,4 @@ void openFileSelector(Function(num, num) setStateForUploadPercent,
   //   print("done ");
   // });
 
-  print("File uploaded successfully");
-}
+
